@@ -1,38 +1,39 @@
-import React from "react";
+import { useEffect } from "react";
+
 import "./Modal.scss";
 import PropTypes from "prop-types";
 
-export default class Modal extends React.Component {
-  static propTypes = {
-    img: PropTypes.shape({ id: PropTypes.number.isRequired }),
-    toggleModal: PropTypes.func.isRequired,
-  };
+export default function Modal({ img, toggleModal }) {
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyDown);
-  }
-  componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  handleKeyDown = (e) => {
+  const handleKeyDown = (e) => {
+    console.log("handleKeyDown");
     if (e.code === "Escape") {
-      this.props.toggleModal();
+      toggleModal();
     }
   };
 
-  closeModal = (e) => {
+  const closeModal = (e) => {
     if (e.target === e.currentTarget) {
-      this.props.toggleModal();
+      toggleModal();
     }
   };
-  render() {
-    return (
-      <div className="Overlay" onClick={this.closeModal}>
-        <div className="Modal">
-          <img src={this.props.img.largeImageURL} alt={this.props.img.tags} />
-        </div>
+
+  return (
+    <div className="Overlay" onClick={closeModal}>
+      <div className="Modal">
+        <img src={img.largeImageURL} alt={img.tags} />
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+Modal.propTypes = {
+  img: PropTypes.shape({ id: PropTypes.number.isRequired }),
+  toggleModal: PropTypes.func.isRequired,
+};
