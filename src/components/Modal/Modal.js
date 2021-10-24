@@ -12,7 +12,6 @@ export default function Modal({ img, toggleModal }) {
   });
 
   const handleKeyDown = (e) => {
-    console.log("handleKeyDown");
     if (e.code === "Escape") {
       toggleModal();
     }
